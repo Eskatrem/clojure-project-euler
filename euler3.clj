@@ -1,16 +1,16 @@
-(ns project-euler.core
-   (:require clojure.contrib.math))
+(ns project-euler.core)
+;;   (:require clojure.contrib.math))
 
-(ns user (:use clojure.contrib.math))
+;;(ns user (:use clojure.contrib.math))
+(ns user)
 
 (def mynum 600851475143)
 
-(def max-factor (ceil (sqrt mynum)))
+(def max-factor (Math/ceil (Math/sqrt mynum)))
 
 (defn find-next-divisor [n test-divisor]
-  (cond (> test-divisor (sqrt n) ) n
-        (= (mod n test-divisor) 0) test-divisor
-        :else (find-divisor n (+ test-divisor 1))
+  (cond (= (mod n test-divisor) 0) test-divisor
+        :else (recur n (inc test-divisor))
         )
   )
 
@@ -18,10 +18,12 @@
   (find-next-divisor n 2))
 
 (defn prime? [n]
-  (= n (smallest-divisor n)))
+  (every?  #(not= 0 (mod n %)) (range 2 (Math/ceil (Math/sqrt n)))))
 
-(apply max (for [x (range 2 max-factor)
-             :when (and (= 0 (mod mynum x)) (prime? x) )]
-         x)
-     )
+
+(apply max (filter prime? (range 2 max-factor)))
+;; (apply max (for [x (range 2 max-factor)
+;;                  :when (and (= 0 (mod mynum x)) (prime? x) )]
+;;              x)
+;;       )
 
